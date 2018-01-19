@@ -1,0 +1,82 @@
+﻿pass_template: 
+    samplerstates:
+        samLinear:
+            filter: MIN_MAG_MIP_LINEAR
+            addressU: CLAMP
+            addressV: CLAMP
+        samLinearWrap:
+            filter: MIN_MAG_MIP_LINEAR
+            addressU: WRAP
+            addressV: WRAP
+    type: match-color-input
+    constant-buffers: 
+        globalParams: {screenSize: SCREEN_SIZE, elapsedTime: ELAPSED_TIME, captureState: CAPTURE_STATE}
+        controlBuf: {g_sldBrightness: brightnessSlider, g_sldContrast: contrastSlider, g_sldVibrance: vibranceSlider } 
+
+typical_slider:
+      type: float
+      minimum-value: 0.0
+      maximum-value: 1.0
+      default-value: 0.5
+      ui-sticky-region: 0.01
+      ui-value-unit: "%"
+      ui-value-min: -100
+      ui-value-max: 100
+      ui-value-step: 20
+
+user-constants:
+    - name: brightnessSlider 
+      ui-hint: "Use this to set brightness offset: 0 is -100%, 1 is +100%"
+      ui-label: "Brightness"
+      ui-label-localized:
+          ru-RU: "Яркость"
+          fr-FR: "Luminosité"
+          it-IT: "Luminosità"
+          de-DE: "Helligkeit"
+          es-ES: "Brillo"
+          es-MX: "Brillo"
+          zh-CHS: "亮度"
+          zh-CHT: "亮度"
+          ja-JA: "ブライトネス"
+      default-value: 0.5
+      ui-sticky-value: 0.5
+      import: [typical_slider]
+    - name: contrastSlider 
+      ui-hint: "Use this to scale contrast of all channels: 0 is 20%, 1 is 500%"
+      ui-label: "Contrast"
+      ui-label-localized:
+          ru-RU: "Контраст"
+          fr-FR: "Contraste"
+          it-IT: "Contrasto"
+          de-DE: "Kontrast"
+          es-ES: "Contraste"
+          es-MX: "Contraste"
+          zh-CHS: "对比度"
+          zh-CHT: "對比度"
+          ja-JA: "コントラスト"
+      default-value: 0.5
+      ui-sticky-value: 0.5
+      import: [typical_slider]
+    - name: vibranceSlider 
+      ui-hint: "Use this to scale Vibrance effect: 0 is 0%, 1 is 100%"
+      ui-label: "Vibrance"
+      ui-label-localized:
+          ru-RU: "Насыщенность"
+          fr-FR: "Éclat"
+          it-IT: "Brillantezza"
+          de-DE: "Farbanpassung"
+          es-ES: "Intensidad"
+          es-MX: "Vibrance"
+          zh-CHS: "亮丽"
+          zh-CHT: "振動"
+          ja-JA: "自然な彩度"
+      default-value: 0.5
+      ui-sticky-value: 0.5
+      import: [typical_slider]
+
+main:
+    import: [pass_template]
+    shader: PS_Vibrance@Adjustments.fx
+    textures:
+        txDiffuse:
+            channel: PIPE_INPUTS_COLOR

@@ -1,0 +1,27 @@
+Manifest-Version: 1.0
+Bundle-SymbolicName: org.xmind.ui.help.nl_da;singleton:=true
+Bundle-Name: XMind Help Danish Language Support
+Bundle-Version: 3.7.3.201708241944
+Archiver-Version: Plexus Archiver
+Built-By: frankshaka
+Bundle-ManifestVersion: 2
+Bundle-Vendor: XMind Ltd.
+Fragment-Host: org.xmind.ui.help
+Created-By: Apache Maven 3.3.3
+Build-Jdk: 1.8.0_92
+Eclipse-BundleShape: dir
+
+Name: META-INF/maven/org.xmind.help.plugins/org.xmind.ui.help.nl_da/po
+ m.properties
+SHA-256-Digest: UHcf3kMwcGihOl1nKtmNsuFWxZipo7sdmOxYdHd1qxg=
+
+Name: about.html
+SHA-256-Digest: zIP/do0RthmafXjThr5FKRgwokiG8oPXBVIhy6B3atk=
+
+Name: META-INF/maven/org.xmind.help.plugins/org.xmind.ui.help.nl_da/po
+ m.xml
+SHA-256-Digest: 8c9qIKYEuQEs4oJvyNiQmMq3vKVOqV0zLbYBrTsIGQk=
+
+Name: plugin_da.properties
+SHA-256-Digest: e6pIGFGOES0fYAG1CRQ8Gxfyhbw5ZIG6ueCLD8L3b9k=
+

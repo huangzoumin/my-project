@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<nvi name="NvContainer.ContainerTelemetryApiHelper" title="${{title}}" version="${{version}}" versionText="${{version}}" timestamp="${{timestamp}}" disposition="demand" hidden="true" installerMin="2.1002.234.2014">
+	<strings>
+		<string name="title" value="NVIDIA TelemetryApi helper for NvContainer"/>
+		<string name="version" value="1.6"/>
+		<string name="timestamp" value="2017-08-11T08:58:41"/>
+		<string name="InstallFolder" value="${{NvidiaProgramFiles}}\NvContainer"/>
+		<string name="InstallFolderX86" value="${{NvidiaProgramFilesX86}}\NvContainer"/>
+		<string name="TelemetryApiHelperBinaryName" value="NvContainerTelemetryApi.dll"/>
+	</strings>
+	<filter name="32bit" platform="x86"/>
+	<filter name="64bit" platform="amd64"/>
+	<properties>
+		<bool name="Install32BitTelemetryHelper" value="true"/>
+	</properties>
+	<dependencies>
+		<package type="requires" package="NvContainer"/>
+	</dependencies>
+	<manifest>
+		<file name="NvContainerTelemetryApi.nvi"/>
+		<file name="x86\${{TelemetryApiHelperBinaryName}}"/>
+		<file name="x86_64\${{TelemetryApiHelperBinaryName}}"/>
+	</manifest>
+	<phases>
+		<if filter="32bit">
+			<standard phase="copyFilesX86">
+				<copyFile target="${{InstallFolder}}\${{TelemetryApiHelperBinaryName}}" source="x86\${{TelemetryApiHelperBinaryName}}"/>
+			</standard>
+		</if>
+		<if filter="64bit">
+			<standard phase="copyFilesAMD64">
+				<copyFile target="${{InstallFolder}}\${{TelemetryApiHelperBinaryName}}" source="x86_64\${{TelemetryApiHelperBinaryName}}"/>
+			</standard>
+			<standard phase="copyFilesX86OnAMD64" platform="x86" condition="Install32BitTelemetryHelper">
+				<copyFile target="${{InstallFolderX86}}\${{TelemetryApiHelperBinaryName}}" source="x86\${{TelemetryApiHelperBinaryName}}"/>
+			</standard>
+		</if>
+	</phases>
+</nvi>

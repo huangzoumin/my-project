@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.xmind.seawind.feature"
+      label="XMind Cloud"
+      version="1.0.1.201708241944"
+      provider-name="XMind Ltd.">
+
+   <description>
+      XMind Cloud
+   </description>
+
+   <copyright>
+      Copyright(C) 2006-2015, XMind Ltd. and others.
+   </copyright>
+
+   <license url="license.html">
+      XMind 3 is dual licensed under 2 open source licenses:
+the Eclipse Public License v1.0 (EPL),
+which is available at http://www.eclipse.org/legal/epl-v10.html ,
+and the GNU Lesser General Public License v3 (LGPL),
+which is available at http://www.gnu.org/licenses/lgpl.html .
+   </license>
+
+   <plugin
+         id="org.xmind.seawind.core"
+         download-size="218"
+         install-size="468"
+         version="1.0.1.201708241944"
+         unpack="false"/>
+
+   <plugin
+         id="org.xmind.ui.seawind"
+         download-size="735"
+         install-size="1178"
+         version="1.0.1.201708241944"
+         unpack="false"/>
+
+</feature>

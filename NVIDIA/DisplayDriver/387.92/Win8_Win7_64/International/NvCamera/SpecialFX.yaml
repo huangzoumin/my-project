@@ -1,0 +1,80 @@
+﻿pass_template: 
+    samplerstates:
+        samLinear:
+            filter: MIN_MAG_MIP_LINEAR
+            addressU: CLAMP
+            addressV: CLAMP
+    type: match-color-input
+    constant-buffers: 
+        globalParams: {screenSize: SCREEN_SIZE, captureState: CAPTURE_STATE, tileUV: TILE_UV_RANGE}
+        controlBuf: {g_sldColor: colorSlider, g_sldSketch: sketchSlider, g_sldVignette: vignetteSlider} 
+
+typical_slider:
+      type: float
+      minimum-value: 0.0
+      maximum-value: 1.0
+      default-value: 0.5
+      ui-sticky-region: 0.01
+      ui-value-unit: "%"
+      ui-value-min: 0
+      ui-value-max: 100
+      ui-value-step: 10
+
+user-constants:
+    - name: sketchSlider
+      ui-hint: "Use this to scale Grain effect: 0 is 0%, 1 is 100%"
+      ui-label: "Sketch"
+      ui-label-localized:
+          ru-RU: "Набросок"
+          fr-FR: "Dessin"
+          it-IT: "Definizione"
+          de-DE: "Bleistiftskizze"
+          es-ES: "Bosquejo"
+          es-MX: "Boceto"
+          zh-CHS: "素描"
+          zh-CHT: "草圖"
+          ja-JA: "スケッチ"
+      default-value: 0.0
+      ui-sticky-value: 0.0
+      import: [typical_slider]
+    - name: colorSlider 
+      ui-hint: "Use this to set intensity, 0% to 100%"
+      ui-label: "Color enhancer"
+      ui-label-localized:
+          ru-RU: "Изменение цвета"
+          fr-FR: "Amél. couleurs"
+          it-IT: "Ottimiz. colori"
+          de-DE: "Farbverbesserung"
+          es-ES: "Potenc. color"
+          es-MX: "Optimiz. de color"
+          zh-CHS: "颜色优化器"
+          zh-CHT: "色彩增强器"
+          ja-JA: "色の強調"
+      default-value: 0.0
+      ui-sticky-value: 0.0
+      import: [typical_slider]
+    - name: vignetteSlider 
+      ui-hint: "Use this to scale Vignette effect: 0 is 0%, 1 is 100%"
+      ui-label: "Vignette"
+      ui-label-localized:
+          ru-RU: "Виньетка"
+          fr-FR: "Vignettage"
+          it-IT: "Vignettatura"
+          de-DE: "Vignette"
+          es-ES: "Viñeta"
+          es-MX: "Viñeta"
+          zh-CHS: "花饰图案"
+          zh-CHT: "暈影"
+          ja-JA: "ビネット"
+      default-value: 0.0
+      ui-sticky-value: 0.0
+      import: [typical_slider]
+
+main:
+    import: [pass_template]
+    shader: PS@SpecialFX.fx
+    textures:
+        txDiffuse:
+            channel: PIPE_INPUTS_COLOR
+        
+   

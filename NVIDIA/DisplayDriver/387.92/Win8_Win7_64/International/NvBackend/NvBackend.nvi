@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<nvi name="NvBackend" title="${{Title}}" version="${{Version}}" versionText="${{Version}}" timestamp="2017-09-18T16:30:06" disposition="demand" hidden="true" installerMin="2.1002.244.2070">
+	<filter name="minVista" min="6.0"/>
+	<filter name="XP" min="5.1" max="5"/>
+	<strings>
+		<string name="Version" value="28.0.0.0"/>
+		<string name="Title" value="NVIDIA Backend"/>
+		<string name="BackendDllName" value="NvBackend.dll"/>
+		<string name="BackendApiDllNameX86" value="NvBackendAPI32.dll"/>
+		<string name="BackendApiDllNameX64" value="NvBackendAPI64.dll"/>
+		<string name="NvContainerRegistryPath" value="${{NvidiaSoftwareKey}}\NvContainer"/>
+		<string name="UpdateCorePath" value="${{NvidiaProgramFiles}}\Update Core"/>
+		<string name="UpdateCoreX86Path" value="${{NvidiaProgramFilesX86}}\Update Core"/>
+		<string name="SymlinkName" value="NvBackend"/>
+		<string name="pluginDeleteMaxTimeout" value="10000"/>
+		<string name="NvContainerPluginDirectoryUser32" value="${{NvidiaProgramFilesX86}}\NvContainer\plugins\User"/>
+		<string name="NvContainerPluginDirectoryLS32" value="${{NvidiaProgramFilesX86}}\NvContainer\plugins\LocalSystem"/>
+		<string name="NvContainerPluginDirectoryLS64" value="${{NvidiaProgramFiles}}\NvContainer\plugins\LocalSystem"/>
+		<string name="NvBackendPluginDirectoryUser32" value="${{NvidiaProgramFilesX86}}\NvBackend\plugins\User"/>
+		<string name="NvBackendPluginDirectoryLS32" value="${{NvidiaProgramFilesX86}}\NvBackend\plugins\LocalSystem"/>
+		<string name="NvBackendPluginDirectoryLS64" value="${{NvidiaProgramFiles}}\NvBackend\plugins\LocalSystem"/>
+		<string name="ContainerBinaryName" value="nvcontainer.exe"/>
+		<string name="NvOAWrapperCacheBinaryName" value="NvOAWrapperCache.exe"/>
+	</strings>
+	<constraints>
+	</constraints>
+	<dependencies>
+		<package type="requires" package="Update.Core"/>
+		<package type="requires" package="NvContainer.User"/>
+		<package type="after" package="Update.Core"/>
+		<package type="requires" package="NvTelemetry"/>
+	</dependencies>
+	<extensions>
+	</extensions>
+	<properties>
+		<bool name="IsiCafeUpdateInstalled" value="false"/>
+		<bool name="FixedInstallLocation" value="true"/>
+		<string name="InstallLocation" value="${{UpdateCoreX86Path}}"/>
+		<bool name="IsInternational" value="false"/>
+		<bool name="IsGFExperienceComponent" value="true"/>
+		<bool name="IsQuadroExperienceComponent" value="false"/>
+		<bool name="IsUpdateComponent" value="true"/>
+		<string name="BackendAPI32BitDll" value="${{BackendApiDllNameX86}}"/>
+		<string name="BackendAPI32BitDllPath" value="${{UpdateCoreX86Path}}\${{BackendApiDllNameX86}}"/>
+		<string name="UpdateType" value="GFExperience"/>
+		<bool name="UsesNvContainer" value="true"/>
+		<bool name="UsesNvTelemetry" value="true"/>
+	</properties>
+	<manifest>
+		<file name="NvBackend.nvi"/>
+		<file name="${{BackendDllName}}"/>
+		<file name="${{BackendApiDllNameX86}}"/>
+		<file name="${{BackendApiDllNameX64}}"/>
+		<file name="detoured.dll"/>
+		<file name="NvDriverUpdateCheck32.dll"/>
+		<file name="NvDriverUpdateCheck64.dll"/>
+		<file name="NvLiveKernel32.dll"/>
+		<file name="NvLiveKernel64.dll"/>
+		<file name="ApplicationOntology.7z"/>
+	</manifest>
+	<phases>
+		<standard phase="deleteLegacyFiles" onError="ignore" when="install">
+			<deleteFile target="${{NvContainerPluginDirectoryUser32}}\${{BackendDllName}}"/>
+			<deleteDirectoryTree target="${{UpdateCoreX86Path}}\Plugin"/>
+			<deleteFile target="${{NvidiaProgramFilesX86}}\NvBackend\DAO.exe"/>
+		</standard>
+		<standard phase="RemoveBackendData" when="uninstall">
+			<deleteDirectoryTree target="${{LocalUserAppData}}\NVIDIA\NvBackend"/>
+			<deleteDirectory target="${{LocalUserAppData}}\NVIDIA"/>
+			<deleteDirectoryTree target="${{CommonAppData}}\NVIDIA Corporation\NvBackend"/>
+			<deleteDirectoryTree target="${{CommonAppData}}\NVIDIA Corporation\DriverDumps"/>
+		</standard>
+		<standard phase="copyx86BackendBinaries" platform="x86">
+			<copyFile target="${{BackendApiDllNameX86}}"/>
+			<copyFile target="detoured.dll"/>
+			<copyFile target="${{NvBackendPluginDirectoryUser32}}\${{BackendDllName}}" source="${{BackendDllName}}"/>
+			<copyFile target="${{NvidiaProgramFilesX86}}\NvBackend\ApplicationOntology.7z" source="ApplicationOntology.7z"/>
+		</standard>
+		<standard phase="copyAmd64BackendBinaries" platform="amd64">
+			<copyFile target="${{UpdateCorePath}}\${{BackendApiDllNameX64}}" source="${{BackendApiDllNameX64}}"/>
+		</standard>
+		<standard phase="copyPluginsLS32" platform="x86only">
+			<copyFile target="${{NvBackendPluginDirectoryLS32}}\_NvLiveKernel32.dll" source="NvLiveKernel32.dll"/>
+		</standard>
+		<standard phase="copyPluginsLS64" platform="amd64">
+			<copyFile target="${{NvBackendPluginDirectoryLS64}}\_NvLiveKernel64.dll" source="NvLiveKernel64.dll"/>
+		</standard>
+		<standard phase="AddContainerDllPathRegistryKey" when="install" platform="x86">
+			<addRegistry keyName="${{NvContainerRegistryPath}}\DllDirectories" valueName="NvBackend" value="${{UpdateCoreX86Path}}" type="REG_SZ"/>
+		</standard>
+		<standard phase="DelContainerDllPathRegistryKey" when="uninstall" platform="x86">
+			<deleteRegistry keyName="${{NvContainerRegistryPath}}\DllDirectories" valueName="NvBackend"/>
+		</standard>
+		<exe phase="killNvOAWrapperCache" name="${{SystemDirectory}}\taskkill.exe" when="uninstall" onError="ignore">
+			<arg value="/f /im ${{NvOAWrapperCacheBinaryName}}" quote="none"/>
+		</exe>
+		<standard phase="copyDriverUpdater32" platform="x86only">
+			<copyFile target="${{NvidiaProgramFilesX86}}\NvDriverUpdateCheck\NvDriverUpdateCheck32.dll" source="NvDriverUpdateCheck32.dll"/>
+		</standard>
+		<standard phase="scheduleDriverUpdater32" platform="x86only">
+			<scheduleTask action="create" taskName="NvDriverUpdateCheckDaily" triggerType="daily" author="NVIDIA Corporation" description="Checks for NVIDIA driver updates before GeForce Experience is first launched" processPath="${{NvidiaProgramFilesX86}}\NvContainer\${{ContainerBinaryName}}" triggerTime="12:25" arguments="-d &quot;${{NvidiaProgramFilesX86}}\NvDriverUpdateCheck&quot; -l 3 -f ${{CommonAppData}}\NVIDIA\NvContainerDriverUpdateCheck.log"/>
+		</standard>
+		<standard phase="copyDriverUpdater64" platform="amd64">
+			<copyFile target="${{NvidiaProgramFiles}}\NvDriverUpdateCheck\NvDriverUpdateCheck64.dll" source="NvDriverUpdateCheck64.dll"/>
+		</standard>
+		<standard phase="scheduleDriverUpdater64" platform="amd64">
+			<scheduleTask action="create" taskName="NvDriverUpdateCheckDaily" triggerType="daily" author="NVIDIA Corporation" description="Checks for NVIDIA driver updates before GeForce Experience is first launched" processPath="${{NvidiaProgramFiles}}\NvContainer\${{ContainerBinaryName}}" triggerTime="12:25" arguments="-d &quot;${{NvidiaProgramFiles}}\NvDriverUpdateCheck&quot; -l 3 -f ${{CommonAppData}}\NVIDIA\NvContainerDriverUpdateCheck.log"/>
+		</standard>
+		<standard phase="RemoveDriverUpdaterLogs" when="uninstall">
+			<deleteFile target="${{CommonAppData}}\NVIDIA\NvContainerDriverUpdateCheck.log"/>
+			<deleteFile target="${{CommonAppData}}\NVIDIA\NvContainerDriverUpdateCheck.log_backup1"/>
+			<deleteDirectory target="${{CommonAppData}}\NVIDIA"/>
+			<deleteDirectoryTree target="${{LocalUserAppData}}\NVIDIA Corporation\NvDriverUpdateCheck"/>
+		</standard>
+		<standard phase="deletePluginFile" when="uninstall">
+			<deleteDirectoryTree target="${{NvBackendPluginDirectoryUser32}}" waitForUnlock="${{pluginDeleteMaxTimeout}}"/>
+		</standard>
+		<standard phase="symlinkPluginsLS32" platform="x86only">
+			<createDirectory target="${{NvContainerPluginDirectoryLS32}}\${{SymlinkName}}" source="${{NvBackendPluginDirectoryLS32}}" symLink="true"/>
+		</standard>
+		<standard phase="symlinkPluginsLS64" platform="amd64">
+			<createDirectory target="${{NvContainerPluginDirectoryLS64}}\${{SymlinkName}}" source="${{NvBackendPluginDirectoryLS64}}" symLink="true"/>
+		</standard>
+		<standard phase="deleteX86LinkOnX64" when="install" onError="ignore" platform="amd64">
+			<deleteDirectory target="${{NvContainerPluginDirectoryLS32}}\${{SymlinkName}}"/>
+		</standard>
+		<standard phase="symlinkPluginsUser32" platform="x86">
+			<createDirectory target="${{NvContainerPluginDirectoryUser32}}\${{SymlinkName}}" source="${{NvBackendPluginDirectoryUser32}}" symLink="true"/>
+		</standard>
+	</phases>
+</nvi>

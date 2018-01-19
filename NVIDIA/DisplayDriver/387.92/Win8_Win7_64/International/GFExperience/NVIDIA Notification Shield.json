@@ -1,0 +1,11 @@
+{"switches": [
+    "nv-notification-type=STACK",
+    "nv-def-window-size=480,100",
+    "nv-def-window-margin=10,10",
+    "nv-no-windows-borders",
+    "nv-url-relative=www/desktop-notification-app.html",
+    "nv-node-app=NvNode\\nvnodejslauncher.exe",
+    "nv-node-data=NvNode\\nodejs.json",
+    "nv-shared-storage-name=NVIDIA Notification"
+    ]
+}

@@ -1,0 +1,9 @@
+{"switches": [
+    "nv-notification-type=QUEUE",
+    "nv-def-window-size=480,100",
+    "nv-def-window-margin=10,10",
+    "nv-no-windows-borders",
+    "nv-url-relative=www/desktop-notification-app.html",
+    "nv-telemetry-path=NvTelemetry\\NvTelemetryAPI32.dll"
+  ]
+}
